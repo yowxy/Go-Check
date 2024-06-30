@@ -1,25 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Logo from "./components/logo";
+import Form from "./components/Form";
+import Checklist from "./components/Checklist";
+import Stats from "./components/Stats";
+// const  listItemms = [
+//   {id:1 ,title:"Eat", done:"true"},
+//   {id:2 ,title:"Hungry", done:"false"},
+// ];
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [listItems, setListItems] = useState([]);
+    function handleItem (item){
+      setListItems((listItems) => [...listItems,item]);
+    }
+
+    function handleDeleteitem(id){
+      setListItems((listItems) => listItems.filter((item) => item.id !== id));
+    }
+
+    function  handleToogleItem (id){
+        setListItems((listItems)=>{
+          return listItems.map((item)=>{
+            if(item.id === id) {
+                return{
+                  ...item,
+                  done: !item.done,
+                };
+            }
+            return item;
+          })
+        })
+    }
+
+    function handleClearitems (){
+      const confirm = window.confirm("yakin ingin menghapus item ini?")
+      if(confirm){
+        setListItems([]);
+      }
+    }
+
+  return(
+        <div className="app">
+          <Logo/>
+          <Form onAddItem ={handleItem}/>
+          <Checklist items={listItems} 
+
+          onDeleteItem={handleDeleteitem} 
+
+          onToogleItem={handleToogleItem} 
+
+          onClearItems={handleClearitems}/>
+
+          <Stats items ={listItems}/>
+        </div>
+  )
 }
+
+
+
+
+
+
 
 export default App;
